@@ -1,0 +1,73 @@
+{
+  "repo": "watch-chain-finality-scope",
+  "language": "C",
+  "category": "Blockchain tooling",
+  "goal": "Implement a C blockchain tooling project for finality protocol validation, using framed sample traffic and bounds and ordering tests.",
+  "review_model": {
+    "terms": [
+      "event finality",
+      "nonce pressure",
+      "settlement risk",
+      "proof depth"
+    ],
+    "lanes": [
+      "ship",
+      "watch",
+      "hold"
+    ],
+    "score": "signal * 2 + slack + confidence - drag * 3",
+    "purpose": "surface the domain-specific cases that need the most careful review"
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "focus": "event finality",
+      "signal": 68,
+      "slack": 21,
+      "drag": 31,
+      "confidence": 80,
+      "score": 144,
+      "lane": "ship"
+    },
+    {
+      "name": "stress",
+      "focus": "nonce pressure",
+      "signal": 77,
+      "slack": 37,
+      "drag": 28,
+      "confidence": 91,
+      "score": 198,
+      "lane": "ship"
+    },
+    {
+      "name": "edge",
+      "focus": "settlement risk",
+      "signal": 60,
+      "slack": 49,
+      "drag": 32,
+      "confidence": 94,
+      "score": 167,
+      "lane": "ship"
+    },
+    {
+      "name": "recovery",
+      "focus": "proof depth",
+      "signal": 81,
+      "slack": 30,
+      "drag": 23,
+      "confidence": 69,
+      "score": 192,
+      "lane": "ship"
+    },
+    {
+      "name": "stale",
+      "focus": "event finality",
+      "signal": 56,
+      "slack": 38,
+      "drag": 29,
+      "confidence": 76,
+      "score": 139,
+      "lane": "watch"
+    }
+  ]
+}

@@ -1,68 +1,40 @@
 # watch-chain-finality-scope
 
-`watch-chain-finality-scope` is a focused C codebase around implement a C blockchain tooling project for finality protocol validation, using framed sample traffic and bounds and ordering tests. It is meant to be easy to inspect, run, and extend without a hosted service.
+`watch-chain-finality-scope` explores blockchain tooling with a small C codebase and local fixtures. The technical goal is to implement a C blockchain tooling project for finality protocol validation, using framed sample traffic and bounds and ordering tests.
 
-## Watch Chain Finality Scope Walkthrough
+## Problem It Tries To Make Smaller
 
-I would read the project from the outside in: command, fixture, model, then roadmap. That keeps the blockchain tooling idea grounded in files that can be checked locally.
+The project exists to keep a narrow engineering decision visible and testable. For this repo, that decision is how event finality and settlement risk should influence a review result.
 
-## How It Is Put Together
+## Watch Chain Finality Scope Review Notes
 
-The interesting part is the boundary between accepted and reviewed scenarios. Extended examples sit near that boundary so future edits can show whether the model became more permissive or more cautious. The C implementation keeps headers, source, and assertions separate so bounds and types are easy to review.
+`stress` and `stale` are the cases worth reading first. They show the optimistic and cautious ends of the fixture.
 
-## Reason For The Project
+## Working Pieces
 
-This project keeps the domain idea close to the tests. That makes it useful as a reference implementation, a small experiment, or a starting point for a more specialized tool.
+- `fixtures/domain_review.csv` adds cases for event finality and nonce pressure.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/watch-chain-finality-walkthrough.md` walks through the case spread.
+- The C code includes a review path for `nonce pressure` and `event finality`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Capabilities
+## Design Notes
 
-- Uses fixture data to keep event replay changes visible in code review.
-- Includes extended examples for invariant checks, including `surge` and `degraded`.
-- Documents settlement rules tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-- Stores project constants and verification metadata in `metadata/project.json`.
+The fixture data drives the tests. The code stays thin, while `metadata/domain-review.json` and `config/review-profile.json` explain what each case is meant to protect.
 
-## Data Notes
+The C addition stays small enough to inspect in one sitting.
 
-`recovery` is the first example I would inspect because it lands on the `accept` path with a score of 207. The broader file also keeps `degraded` at -9 and `surge` at 227, which gives the model a useful low-to-high spread.
-
-## Where Things Live
-
-- `src`: primary implementation
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
-
-## Getting It Running
-
-Clone the repository, enter the directory, and run the verifier. No database server, cloud account, or token is required.
-
-## Command Examples
+## Example Run
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Tests
 
-## Check The Work
+The verifier is intentionally local. It should fail if the fixture score math, lane assignment, or language-specific test drifts.
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
+## Known Limits
 
-The audit command checks repository structure and README constraints before it delegates to the verifier.
-
-## Tradeoffs
-
-The scoring model is simple by design. More domain-specific behavior should be added through explicit adapters or extra fixture classes rather than hidden constants.
-
-## Possible Extensions
-
-- Add a comparison mode that shows how decisions change when one signal is adjusted.
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add a short report command that prints the score breakdown for a single scenario.
-- Add one more blockchain tooling fixture that focuses on a malformed or borderline input.
+The repository is intentionally scoped to local checks. I would expand it by adding adversarial fixtures before adding features.
