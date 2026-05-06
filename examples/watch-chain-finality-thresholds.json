@@ -1,0 +1,17 @@
+{
+  "repo": "watch-chain-finality-scope",
+  "thresholds": {
+    "signal": 3,
+    "slack": 1,
+    "confidence": 1,
+    "drag": 5,
+    "ship": 194,
+    "watch": 98
+  },
+  "terms": [
+    "event finality",
+    "nonce pressure",
+    "settlement risk",
+    "proof depth"
+  ]
+}
